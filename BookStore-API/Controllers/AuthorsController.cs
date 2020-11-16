@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore_API.Controllers
 {
+    /// <summary>
+    /// Interacts with the Authors Table
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -45,7 +48,7 @@ namespace BookStore_API.Controllers
                 _logger.LogInfo("Attempted Get All Authors");
                 var authors = await _authorRepository.FindAll();
                 var response = _mapper.Map<IList<AuthorDTO>>(authors);
-                _logger.LogInfo("uccessfully got all Authors");
+                _logger.LogInfo("Successfully got all Authors");
                 return Ok(response);
             }
             catch (Exception e)
