@@ -1,0 +1,83 @@
+﻿@page "/books/view/{id}"
+@inject IBookRepository _repo
+
+
+<h3>View</h3>
+
+@if (int.Parse(id) < 1 || string.IsNullOrWhiteSpace(id))
+{
+    <ErrorMessage Message="Invalid Selection. Please try again." />
+}
+else if (Model == null)
+{
+    <LoadingMessage Message="Loading Book Details" />
+}
+else
+{
+<div class="row">
+    <div class="col-6">
+        <table class="table table-responsive">
+            <tr>
+                <td>
+                    <strong>Title</strong>
+                </td>
+                <td>@Model.Title</td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Author</strong>
+                </td>
+                <td>
+                    @if (Model.Author == null)
+                    {
+                        <span class="text-muted">No Author Recorded</span>
+                    }
+                    else
+                    {
+                        <a href="/authors/view/@Model.Author.id">@Model.Author.Firstname @Model.Author.Lastname</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Summary</strong>
+                </td>
+                <td>@Model.Summary</td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Published Year</strong>
+                </td>
+                <td>@Model.Year</td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>ISBN</strong>
+                </td>
+                <td>@Model.Isbn</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-4">
+        <img src="uploads/@Model.Image" style="height:300px;width:300px" />
+        <h3 class="text-center text-info">@Model.Price</h3>
+    </div>
+</div>
+}
+
+<a href="/books/" class="btn btn-outline-secondary">
+    <span class="oi oi-media-skip-backward"></span>
+    Back To List
+</a>
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+    private Book Model = new Book();
+
+    protected override async Task OnInitializedAsync()
+    {
+        int ID = Convert.ToInt32(id);
+        Model = await _repo.Get(Endpoints.BooksEndpoint, ID);
+    }
+}
